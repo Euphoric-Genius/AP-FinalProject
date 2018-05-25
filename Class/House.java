@@ -1,59 +1,127 @@
 package Class;
 
-
+import Controller.BoardController;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
+import javafx.scene.input.MouseEvent;
+import Class.*;
 
-import static Class.Board.house;
-import static Class.Client.*;
+import java.util.ArrayList;
+
+import Class.*;
+
+import static Class.Client.isPlayerTurn;
+import static Class.Client.playerColor;
+import static Controller.BoardController.*;
 
 public class House {
-
-
-    String marble;
+    public int x, y;
+    public String marble, marbleColor;
     @FXML
-  public   ImageView imageView = new ImageView();
+    public ImageView imageView = new ImageView();
+    @FXML
+    public Button highlight = new Button();
 
-
-    public House(String marble) {
-
+    public House(String marble, int x, int y) {
+        this.marble = marble;
+        this.x = x;
+        this.y = y;
         if (marble.equals("Pawn")) {
-            String resource = (playerColor.equals("White")) ? "/Files/whitePawn.png" : "/Files/blackPawn.png";
-            imageView.setImage(new Image(resource,60,60,false,false));
-
-            this.marble = (playerColor.equals("White")) ? "WhitePawn" : "BlackPawn";
+            marbleColor = ((playerColor.equals("White") && x == 6) || (playerColor.equals("Black") && x == 1))
+                    ? "White" : "Black";
+            String resource = ((playerColor.equals("White") && x == 6) || (playerColor.equals("Black") && x == 1))
+                    ? "/Files/whitePawn.png" : "/Files/blackPawn.png";
+            imageView.setImage(new Image(resource, 60, 60, false, true));
         }
         if (marble.equals("Knight")) {
-            String resource = (playerColor.equals("White")) ? "/Files/whiteKnight.png" : "/Files/blackKnight.png";
-            imageView.setImage(new Image(resource,60,60,false,false));
-            this.marble = (playerColor.equals("White")) ? "WhiteKnight" : "BlackKnight";
+            marbleColor = ((playerColor.equals("White") && x == 7) || (playerColor.equals("Black") && x == 0))
+                    ? "White" : "Black";
+            String resource = ((playerColor.equals("White") && x == 7) || (playerColor.equals("Black") && x == 0))
+                    ? "/Files/whiteKnight.png" : "/Files/blackKnight.png";
+            imageView.setImage(new Image(resource, 60, 60, false, true));
         }
         if (marble.equals("Bishop")) {
-            String resource = (playerColor.equals("White")) ? "/Files/whiteBishop.png" : "/Files/blackBishop.png";
-            imageView.setImage(new Image(resource,60,60,false,false));
-            this.marble = (playerColor.equals("White")) ? "WhiteBishop" : "BlackBishop";
+            marbleColor = ((playerColor.equals("White") && x == 7) || (playerColor.equals("Black") && x == 0))
+                    ? "White" : "Black";
+            String resource = ((playerColor.equals("White") && x == 7) || (playerColor.equals("Black") && x == 0))
+                    ? "/Files/whiteBishop.png" : "/Files/blackBishop.png";
+            imageView.setImage(new Image(resource, 60, 60, false, true));
+            this.marble = ((playerColor.equals("White") && x == 7) || (playerColor.equals("Black") && x == 0))
+                    ? "WhiteBishop" : "BlackBishop";
         }
         if (marble.equals("Rook")) {
-            String resource = (playerColor.equals("White")) ? "/Files/whiteRook.png" : "/Files/blackRook.png";
-            imageView.setImage(new Image(resource,60,60,false,false));
-            this.marble = (playerColor.equals("White")) ? "WhiteRook" : "BlackRook";
+            marbleColor = ((playerColor.equals("White") && x == 7) || (playerColor.equals("Black") && x == 0))
+                    ? "White" : "Black";
+            String resource = ((playerColor.equals("White") && x == 7) || (playerColor.equals("Black") && x == 0))
+                    ? "/Files/whiteRook.png" : "/Files/blackRook.png";
+            imageView.setImage(new Image(resource, 60, 60, false, true));
         }
         if (marble.equals("Queen")) {
-            String resource = (playerColor.equals("White")) ? "/Files/whiteQueen.png" : "/Files/blackQueen.png";
-            imageView.setImage(new Image(resource,60,60,false,false));
-            this.marble = (playerColor.equals("White")) ? "WhiteQueen" : "BlackQueen";
+            marbleColor = ((playerColor.equals("White") && x == 7) || (playerColor.equals("Black") && x == 0))
+                    ? "White" : "Black";
+            String resource = ((playerColor.equals("White") && x == 7) || (playerColor.equals("Black") && x == 0))
+                    ? "/Files/whiteQueen.png" : "/Files/blackQueen.png";
+            imageView.setImage(new Image(resource, 60, 60, false, true));
         }
         if (marble.equals("King")) {
-            String resource = (playerColor.equals("White")) ? "/Files/whiteKing.png" : "/Files/blackKing.png";
-            imageView.setImage(new Image(resource,60,60,false,false));
-            this.marble = (playerColor.equals("White")) ? "WhiteKing" : "BlackKing";
+            marbleColor = ((playerColor.equals("White") && x == 7) || (playerColor.equals("Black") && x == 0))
+                    ? "White" : "Black";
+            String resource = ((playerColor.equals("White") && x == 7) || (playerColor.equals("Black") && x == 0))
+                    ? "/Files/whiteKing.png" : "/Files/blackKing.png";
+            imageView.setImage(new Image(resource, 60, 60, false, true));
         }
+        highlight.setPrefWidth(70);
+        highlight.setPrefHeight(70);
+        highlight.setVisible(false);
+        imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                resetHouses();
+                ArrayList<Coordinates> possibleMoves;
+                if (isPlayerMarble(playerColor, marbleColor) && isPlayerTurn) {
+                    possibleMoves = BoardController.possibleMoves(marble, marbleColor, x, y);
+                    for (int i = 0; i < possibleMoves.size(); i++) {
+                        int row = possibleMoves.get(i).x, col = possibleMoves.get(i).y;
+                        Board.house[row][col].highlight.setVisible(true);
+                        Board.house[row][col].highlight.setOpacity(0.5);
+                    }
+                }
+            }
+        });
+
     }
 
     public House() {
+        highlight.setPrefWidth(70);
+        highlight.setPrefHeight(70);
+        highlight.setVisible(false);
+        imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                resetHouses();
+                ArrayList<Coordinates> possibleMoves;
+                if (isPlayerMarble(playerColor, marbleColor) && isPlayerTurn) {
+                    possibleMoves = BoardController.possibleMoves(marble, marbleColor, x, y);
+                    for (int i = 0; i < possibleMoves.size(); i++) {
+                        int row = possibleMoves.get(i).x, col = possibleMoves.get(i).y;
+                        Board.house[row][col].highlight.setVisible(true);
+                        Board.house[row][col].highlight.setOpacity(0.5);
+                    }
+                }
+            }
+        });
+
+
     }
 
-
+    private void resetHouses(){
+        for(int i=0;i<8;i++){
+            for(int j=0;j<8;j++){
+                Board.house[i][j].highlight.setVisible(false);
+            }
+        }
+    }
 }
