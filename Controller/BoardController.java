@@ -27,6 +27,16 @@ public class BoardController implements Initializable {
 
     }
 
+    public static void move(int initI, int intiJ, int destI, int destJ) {
+        house[destI][destJ].marble = house[initI][intiJ].marble;
+        house[destI][destJ].marbleColor = house[initI][intiJ].marbleColor;
+        house[destI][destJ].imageView.setImage(house[initI][intiJ].imageView.getImage());
+        house[initI][intiJ].imageView.setImage(null);
+        house[initI][intiJ].marbleColor = "";
+        house[initI][intiJ].marble = "";
+
+    }
+
     public static boolean isPlayerMarble(String playerColor, String marbleColor) {
         if (playerColor.equals(marbleColor)) {
             return true;
@@ -57,7 +67,7 @@ public class BoardController implements Initializable {
 
             }
         }
-        if (marble.equals("Rook")) {
+        if (marble.equals("Rook") || marble.equals("Queen")) {
             boolean[] firstEnemyFounded = new boolean[4];
             for (int k = 1; k <= 7; k++) {
                 if (isMoveLegal(i + k, j, marbleColor) && !firstEnemyFounded[0]) {
@@ -139,7 +149,7 @@ public class BoardController implements Initializable {
             }
 
         }
-        if (marble.equals("Bishop")) {
+        if (marble.equals("Bishop") || marble.equals("Queen")) {
             boolean[] firstEnemyFounded = new boolean[4];
             for (int k = 1; k <= 7; k++) {
                 if (isMoveLegal(i + k, j - k, marbleColor) && !firstEnemyFounded[0]) {
@@ -196,10 +206,55 @@ public class BoardController implements Initializable {
 
 
         }
-        if (marble.equals("Queen")) {
-
-        }
         if (marble.equals("King")) {
+            if (isMoveLegal(i - 1, j - 1, marbleColor)) {
+                temp = new Coordinates();
+                temp.x = i - 1;
+                temp.y = j - 1;
+                coordinates.add(temp);
+            }
+            if (isMoveLegal(i - 1, j + 1, marbleColor)) {
+                temp = new Coordinates();
+                temp.x = i - 1;
+                temp.y = j + 1;
+                coordinates.add(temp);
+            }
+            if (isMoveLegal(i + 1, j - 1, marbleColor)) {
+                temp = new Coordinates();
+                temp.x = i + 1;
+                temp.y = j - 1;
+                coordinates.add(temp);
+            }
+            if (isMoveLegal(i + 1, j + 1, marbleColor)) {
+                temp = new Coordinates();
+                temp.x = i + 1;
+                temp.y = j + 1;
+                coordinates.add(temp);
+            }
+            if (isMoveLegal(i, j - 1, marbleColor)) {
+                temp = new Coordinates();
+                temp.x = i;
+                temp.y = j - 1;
+                coordinates.add(temp);
+            }
+            if (isMoveLegal(i, j + 1, marbleColor)) {
+                temp = new Coordinates();
+                temp.x = i;
+                temp.y = j + 1;
+                coordinates.add(temp);
+            }
+            if (isMoveLegal(i - 1, j, marbleColor)) {
+                temp = new Coordinates();
+                temp.x = i - 1;
+                temp.y = j;
+                coordinates.add(temp);
+            }
+            if (isMoveLegal(i + 1, j, marbleColor)) {
+                temp = new Coordinates();
+                temp.x = i + 1;
+                temp.y = j;
+                coordinates.add(temp);
+            }
 
         }
 //        for(int k=0;k<coordinates.size();k++){
@@ -246,16 +301,18 @@ public class BoardController implements Initializable {
                 } else if (i == 1 || i == 6) {
                     house[i][j] = new House("Pawn", i, j);
                     gridPane.add(house[i][j].imageView, j, i);
-                } else
-                    house[i][j] = new House();
+                } else {
+                    house[i][j] = new House(null, i, j);
+                    gridPane.add(house[i][j].imageView, j, i);
+                }
                 gridPane.add(house[i][j].highlight, j, i);
             }
         }
-        house[3][3].marble = "Bishop";
-        house[3][3].x = 3;
-        house[3][3].y = 3;
-        house[3][3].marbleColor = "Black";
-        house[3][3].imageView.setImage(new Image("/Files/blackBishop.png", 60, 60, false, true));
-        gridPane.add(house[3][3].imageView, 3, 3);
+//        house[3][3].marble = "King";
+//        house[3][3].x = 3;
+//        house[3][3].y = 3;
+//        house[3][3].marbleColor = "Black";
+//        house[3][3].imageView.setImage(new Image("/Files/blackKing.png", 60, 60, false, true));
+//        gridPane.add(house[3][3].imageView, 3, 3);
     }
 }
