@@ -20,7 +20,7 @@ import static Controller.BoardController.*;
 
 public class House {
     public int x, y;
-    public String marble, marbleColor;
+    public String marble, marbleColor = "";
     @FXML
     public ImageView imageView = new ImageView();
     @FXML
@@ -64,20 +64,20 @@ public class House {
                         ? "White" : "Black";
                 String resource = ((playerColor.equals("White") && x == 7) || (playerColor.equals("Black") && x == 0))
                         ? "/Files/whiteQueen.png" : "/Files/blackQueen.png";
-                imageView.setImage(new Image(resource, 60, 60, false, true));
+                imageView.setImage(new Image(resource, 70, 64, true, true));
             }
             if (marble.equals("King")) {
                 marbleColor = ((playerColor.equals("White") && x == 7) || (playerColor.equals("Black") && x == 0))
                         ? "White" : "Black";
                 String resource = ((playerColor.equals("White") && x == 7) || (playerColor.equals("Black") && x == 0))
                         ? "/Files/whiteKing.png" : "/Files/blackKing.png";
-                imageView.setImage(new Image(resource, 60, 60, false, true));
+                imageView.setImage(new Image(resource, 70, 64, false, true));
             }
         }
         highlight.setPrefWidth(74);
         highlight.setPrefHeight(74);
         highlight.setVisible(false);
-        highlight.setStyle("-fx-background-color: #313163");
+        highlight.setStyle("-fx-background-color: #673444");
         imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -89,7 +89,7 @@ public class House {
                     for (int i = 0; i < possibleMoves.size(); i++) {
                         int row = possibleMoves.get(i).x, col = possibleMoves.get(i).y;
                         Board.house[row][col].highlight.setVisible(true);
-                        Board.house[row][col].highlight.setOpacity(0.5);
+                        Board.house[row][col].highlight.setOpacity(0.7);
                     }
                 }
 
@@ -98,57 +98,15 @@ public class House {
         highlight.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                System.out.println(highlight.isVisible());
                 if (highlight.isVisible()) {
-                    System.out.println(Main.recentHouse.x);
                     move(Main.recentHouse.x, Main.recentHouse.y, x, y);
                     resetHouses();
+                    //Place for changing isPlayerTurn turn boolean.
                 }
-                System.out.println(house[Main.recentHouse.x][Main.recentHouse.y].marble + "!!");
-                System.out.println(house[x][y].marble + "!");
             }
         });
 
     }
-
-//    public House(int i,int j) {
-//        this.x=i;
-//        this.y=j;
-//        highlight.setPrefWidth(30);
-//        highlight.setPrefHeight(30);
-//        highlight.setVisible(false);
-//
-//        highlight.setOnMouseClicked(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent event) {
-//                System.out.println(highlight.isVisible());
-//                if(highlight.isVisible()){
-//                    move(Main.recentHouse.x,Main.recentHouse.y,x,y);
-//
-//                }
-//                resetHouses();
-//                System.out.println(house[Main.recentHouse.x][Main.recentHouse.y].marble+"!!");
-//                System.out.println(house[x][y].marble +"!");
-//            }
-//        });
-//        imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent event) {
-//                resetHouses();
-//                ArrayList<Coordinates> possibleMoves;
-//                if (isPlayerMarble(playerColor, marbleColor) && isPlayerTurn) {
-//                    possibleMoves = BoardController.possibleMoves(marble, marbleColor, x, y);
-//                    for (int i = 0; i < possibleMoves.size(); i++) {
-//                        int row = possibleMoves.get(i).x, col = possibleMoves.get(i).y;
-//                        Board.house[row][col].highlight.setVisible(true);
-//                        Board.house[row][col].highlight.setOpacity(0.5);
-//                    }
-//                }
-//            }
-//        });
-//
-//
-//    }
 
     private void resetHouses() {
         for (int i = 0; i < 8; i++) {

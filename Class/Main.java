@@ -11,7 +11,7 @@ public class Main extends Application {
     public static House recentHouse;
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/FXML/sample.fxml"));
         primaryStage.setTitle("Chess");
         primaryStage.setScene(new Scene(root, 650, 650));
