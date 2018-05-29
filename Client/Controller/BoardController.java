@@ -3,6 +3,8 @@ package Client.Controller;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -12,10 +14,13 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import static Client.Class.Board.*;
+import static Client.Class.Client.playerColor;
 
 import Client.Class.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
+
+import javax.swing.*;
 
 
 public class BoardController implements Initializable {
@@ -53,32 +58,34 @@ public class BoardController implements Initializable {
         ArrayList<Coordinates> coordinates = new ArrayList<>();
         Coordinates temp = new Coordinates();
         if (marble.equals("Pawn")) {
-            if (isMoveLegal(i - 1, j, marbleColor)
-                    && !house[i - 1][j].marbleColor.equals(polarColor(marbleColor))) {
-                temp.x = i - 1;
-                temp.y = j;
-                coordinates.add(temp);
-                if (i == 6 && isMoveLegal(4, j, marbleColor)
+            if (marbleColor.equals(playerColor)) {
+                if (isMoveLegal(i - 1, j, marbleColor)
                         && !house[i - 1][j].marbleColor.equals(polarColor(marbleColor))) {
-                    temp = new Coordinates();
-                    temp.x = i - 2;
+                    temp.x = i - 1;
                     temp.y = j;
                     coordinates.add(temp);
+                    if (i == 6 && isMoveLegal(4, j, marbleColor)
+                            && !house[i - 1][j].marbleColor.equals(polarColor(marbleColor))) {
+                        temp = new Coordinates();
+                        temp.x = i - 2;
+                        temp.y = j;
+                        coordinates.add(temp);
+                    }
                 }
-            }
-            if (isMoveLegal(i - 1, j - 1, marbleColor)
-                    && house[i - 1][j - 1].marbleColor.equals(polarColor(marbleColor))) {
-                temp = new Coordinates();
-                temp.x = i - 1;
-                temp.y = j - 1;
-                coordinates.add(temp);
-            }
-            if (isMoveLegal(i - 1, j + 1, marbleColor)
-                    && house[i - 1][j + 1].marbleColor.equals(polarColor(marbleColor))) {
-                temp = new Coordinates();
-                temp.x = i - 1;
-                temp.y = j + 1;
-                coordinates.add(temp);
+                if (isMoveLegal(i - 1, j - 1, marbleColor)
+                        && house[i - 1][j - 1].marbleColor.equals(polarColor(marbleColor))) {
+                    temp = new Coordinates();
+                    temp.x = i - 1;
+                    temp.y = j - 1;
+                    coordinates.add(temp);
+                }
+                if (isMoveLegal(i - 1, j + 1, marbleColor)
+                        && house[i - 1][j + 1].marbleColor.equals(polarColor(marbleColor))) {
+                    temp = new Coordinates();
+                    temp.x = i - 1;
+                    temp.y = j + 1;
+                    coordinates.add(temp);
+                }
             }
         }
         if (marble.equals("Rook") || marble.equals("Queen")) {
@@ -245,49 +252,49 @@ public class BoardController implements Initializable {
 
         }
         if (marble.equals("King")) {
-            if (isMoveLegal(i - 1, j - 1, marbleColor)) {
+            if (isMoveLegal(i - 1, j - 1, marbleColor) && !checkCheck(i - 1, j - 1, marbleColor)) {
                 temp = new Coordinates();
                 temp.x = i - 1;
                 temp.y = j - 1;
                 coordinates.add(temp);
             }
-            if (isMoveLegal(i - 1, j + 1, marbleColor)) {
+            if (isMoveLegal(i - 1, j + 1, marbleColor) && !checkCheck(i - 1, j + 1, marbleColor)) {
                 temp = new Coordinates();
                 temp.x = i - 1;
                 temp.y = j + 1;
                 coordinates.add(temp);
             }
-            if (isMoveLegal(i + 1, j - 1, marbleColor)) {
+            if (isMoveLegal(i + 1, j - 1, marbleColor) && !checkCheck(i + 1, j - 1, marbleColor)) {
                 temp = new Coordinates();
                 temp.x = i + 1;
                 temp.y = j - 1;
                 coordinates.add(temp);
             }
-            if (isMoveLegal(i + 1, j + 1, marbleColor)) {
+            if (isMoveLegal(i + 1, j + 1, marbleColor) && !checkCheck(i + 1, j + 1, marbleColor)) {
                 temp = new Coordinates();
                 temp.x = i + 1;
                 temp.y = j + 1;
                 coordinates.add(temp);
             }
-            if (isMoveLegal(i, j - 1, marbleColor)) {
+            if (isMoveLegal(i, j - 1, marbleColor) && !checkCheck(i, j - 1, marbleColor)) {
                 temp = new Coordinates();
                 temp.x = i;
                 temp.y = j - 1;
                 coordinates.add(temp);
             }
-            if (isMoveLegal(i, j + 1, marbleColor)) {
+            if (isMoveLegal(i, j + 1, marbleColor) && !checkCheck(i, j + 1, marbleColor)) {
                 temp = new Coordinates();
                 temp.x = i;
                 temp.y = j + 1;
                 coordinates.add(temp);
             }
-            if (isMoveLegal(i - 1, j, marbleColor)) {
+            if (isMoveLegal(i - 1, j, marbleColor) && !checkCheck(i - 1, j, marbleColor)) {
                 temp = new Coordinates();
                 temp.x = i - 1;
                 temp.y = j;
                 coordinates.add(temp);
             }
-            if (isMoveLegal(i + 1, j, marbleColor)) {
+            if (isMoveLegal(i + 1, j, marbleColor) && !checkCheck(i + 1, j, marbleColor)) {
                 temp = new Coordinates();
                 temp.x = i + 1;
                 temp.y = j;
@@ -300,9 +307,6 @@ public class BoardController implements Initializable {
 
     private static boolean isMoveLegal(int i, int j, String marbleColor) {
         if (i >= 0 && i <= 7 && j >= 0 && j <= 7 && !house[i][j].marbleColor.equals(marbleColor)) {
-//            if (house[i][j].marble.equals("King")) {
-//                Client.isChecked = true;
-//            }
             return true;
         }
         return false;
@@ -315,8 +319,29 @@ public class BoardController implements Initializable {
         return "White";
     }
 
-    private static void checkCheck() {
-
+    private static boolean checkCheck(int row, int column, String marbleColor) {
+        ArrayList<Coordinates> temp;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (house[i][j].marbleColor.equals(polarColor(marbleColor)) && !house[i][j].marble.equals("Pawn")
+                        && !house[i][j].marble.equals("King")) {
+                    temp = possibleMoves(house[i][j].marble, house[i][j].marbleColor, i, j);
+                    System.err.println(temp.size());
+                    for (int k = 0; k < temp.size(); k++) {
+                        if (temp.get(k).x == row && temp.get(k).y == column) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        if ((house[row - 1][column - 1].marble.equals("Pawn")
+                && house[row - 1][column - 1].marbleColor.equals(polarColor(playerColor)))
+                || (house[row - 1][column + 1].marble.equals("Pawn")
+                && house[row - 1][column + 1].marbleColor.equals(polarColor(playerColor)))) {
+            return true;
+        }
+        return false;
     }
 
     private void houseInitializer() {
@@ -334,11 +359,21 @@ public class BoardController implements Initializable {
                         house[i][j] = new House("Bishop", i, j);
                         gridPane.add(house[i][j].imageView, j, i);
                     } else if (j == 3) {
-                        house[i][j] = new House("King", i, j);
-                        gridPane.add(house[i][j].imageView, j, i);
+                        if (Client.playerColor.equals("Black")) {
+                            house[i][j] = new House("King", i, j);
+                            gridPane.add(house[i][j].imageView, j, i);
+                        } else {
+                            house[i][j] = new House("Queen", i, j);
+                            gridPane.add(house[i][j].imageView, j, i);
+                        }
                     } else if (j == 4) {
-                        house[i][j] = new House("Queen", i, j);
-                        gridPane.add(house[i][j].imageView, j, i);
+                        if (Client.playerColor.equals("Black")) {
+                            house[i][j] = new House("Queen", i, j);
+                            gridPane.add(house[i][j].imageView, j, i);
+                        } else {
+                            house[i][j] = new House("King", i, j);
+                            gridPane.add(house[i][j].imageView, j, i);
+                        }
                     }
                 } else if (i == 1 || i == 6) {
                     house[i][j] = new House("Pawn", i, j);
@@ -351,6 +386,14 @@ public class BoardController implements Initializable {
             }
         }
     }
-
-
+//    Timer t = new Timer(1000, new ClockListener());
 }
+
+//class ClockListener implements ActionListener {
+//    int counter = 600;
+//
+//    @Override
+//    public void actionPerformed(ActionEvent e) {
+//        System.out.println(co);
+//    }
+//}
