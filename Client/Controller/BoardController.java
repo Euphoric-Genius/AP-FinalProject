@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import static Client.Class.Board.*;
+import static Client.Class.Client.FoutputStream;
 import static Client.Class.Client.playerColor;
 
 import Client.Class.*;
@@ -24,7 +25,8 @@ import javax.swing.*;
 
 
 public class BoardController implements Initializable {
-
+    public static Timer OwnTime = new Timer(1000, new ClockListener());
+    public static Timer OpponentTime = new Timer(1000, new ClockListener());
     public static Thread thread = new Thread(new Listener());
     @FXML
     GridPane gridPane;
@@ -350,11 +352,13 @@ public class BoardController implements Initializable {
 
                 if (i == 0 || i == 7) {
                     if (j == 0 || j == 7) {
+
                         house[i][j] = new House("Rook", i, j);
                         gridPane.add(house[i][j].imageView, j, i);
                     } else if (j == 1 || j == 6) {
                         house[i][j] = new House("Knight", i, j);
                         gridPane.add(house[i][j].imageView, j, i);
+
                     } else if (j == 2 || j == 5) {
                         house[i][j] = new House("Bishop", i, j);
                         gridPane.add(house[i][j].imageView, j, i);
@@ -386,14 +390,22 @@ public class BoardController implements Initializable {
             }
         }
     }
-//    Timer t = new Timer(1000, new ClockListener());
+
 }
 
-//class ClockListener implements ActionListener {
-//    int counter = 600;
-//
-//    @Override
-//    public void actionPerformed(ActionEvent e) {
-//        System.out.println(co);
-//    }
-//}
+class ClockListener implements ActionListener {
+    static int counter = 600;
+    int minute = counter / 60;
+    int second = 0;
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        System.out.println(minute + ":" + second);
+//        Client.FoutputStream.format(minute + ":" + second);
+        if (second == 0) {
+            second = 60;
+            minute--;
+        }
+        second--;
+    }
+}

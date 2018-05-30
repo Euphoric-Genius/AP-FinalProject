@@ -9,17 +9,20 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-
+import java.util.Formatter;
+import java.util.Scanner;
 
 
 public class Client extends Application {
     public static String playerColor = System.getenv("Color");
     public static boolean isPlayerTurn = Boolean.valueOf(System.getenv("Turn"));
-    public static boolean isChecked = false;
+    public static boolean isChecked = false,OwnfirstMove=true,OpponentfirstMove=true;
     public static House recentHouse;
     public static Socket socket;
     public static ObjectOutputStream outputStream;
     public static ObjectInputStream inputStream;
+    public static Formatter FoutputStream;
+    public static Scanner SinputStream;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -33,6 +36,9 @@ public class Client extends Application {
         Client.socket = new Socket("127.0.0.1", 1234);
         Client.outputStream = new ObjectOutputStream(Client.socket.getOutputStream());
         Client.inputStream = new ObjectInputStream(Client.socket.getInputStream());
+        FoutputStream=new Formatter(Client.socket.getOutputStream());
+        SinputStream=new Scanner(Client.socket.getInputStream());
+
         launch(args);
     }
 

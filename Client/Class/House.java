@@ -106,6 +106,10 @@ public class House {
                 recentMove.finalX = x;
                 recentMove.finalY = y;
                 isPlayerTurn = false;
+                OwnfirstMove = false;
+                BoardController.OwnTime.stop();
+                if (!OpponentfirstMove)
+                    BoardController.OpponentTime.start();
                 try {
                     Client.outputStream.writeObject(recentMove);
                 } catch (Exception e) {
